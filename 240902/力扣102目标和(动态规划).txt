@@ -1,0 +1,38 @@
+class Solution {
+    public int findTargetSumWays(int[] nums, int target) {
+        //动态规划
+        //由于在相加或者相减过程中,sum有可能为负数,负数在dp数组中没法使用
+        //所以进行平移,根据题目,nums[i]都为正数,全为加的和为s,那么全为减的和为-s,
+        //那么进行平移所需要空间大小就是2*s+1,例如[-3,3]就需要2*3+1个空间,原本-3的位置就用0代替,
+        //原本-2的位置就用1代替,以此类推
+        //根据动态规划的常规做法,都是由简单推向复杂,定义dp[i][sum]为第i位累加和为sum的时候的能
+        //获取到的答案(这个答案指的是当第i位并且此时和为sum的时候,往后推能搜集到的目标和数目,也就是方案数)
+        //明显前面的答案依赖于后面,所以在下标为n(越界位置)并且sum为target的答案为1这个是能够确定的(因为在越界位置
+        //不用考虑nums是加还是减),
+        //接下来要做的就是由后往前递推,dp[i][sum]=dp[i+1][sum+nums[i]]+dp[i+1][sum-nums[i]]
+        //这个递推公式可以翻译为:在下标i位置上,我已经积累了sum,dp[i][sum]的方案数需要
+        //知道我的下一位在我已经有sum的积累上加上/减去nums[i]的方案数
+        int s=0;
+        int n=nums.length;
+        for(int i=0;i<n;i++){
+            s+=nums[i];
+        }
+        if(target>s||target<-s){//目标和大于/小于  总和/总减 不存在答案
+            return 0;//方案数为0
+        }
+        //定义dp数组,进行平移
+        int[][] dp=new int[n+1][2*s+1];
+        dp[n][target+s]=1;//平移原本的dp[n][target]
+        for(int i=n-1;i>=0;i--){
+            for(int sum=-s;sum<=s;sum++){
+                if(sum+nums[i]+s<2*s+1){//不越界的情况下
+                    dp[i][sum+s]=dp[i+1][sum+nums[i]+s];
+                }
+                if(sum-nums[i]+s>=0){
+                    dp[i][sum+s]+=dp[i+1][sum-nums[i]+s];
+                }
+            }
+        }
+        return dp[0][s];
+    }
+}
