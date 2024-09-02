@@ -1,0 +1,47 @@
+class Solution {
+    public static int k;
+    public int maxConsecutiveAnswers(String answerKey, int kk) {
+        //该题存在单调性,那就是子串越长越有可能增加修改次数
+        //那就可以用两个前缀和分别统计T和F,通过前缀和可以快速判断子串内T/F有多少个
+        //这个个数有没有超过k,在这种情形下,自然而然想到了二分答案,check判断条件也自然而然
+        //想到为T/F在子串内是否超过k,范围就是1~n(长度为1到n)
+        //不过时间复杂度自然不如滑动窗口
+        int n=answerKey.length();
+        int[] sumT=new int[n+1];//前i+1个中有多少个T
+        int[] sumF=new int[n+1];
+        k=kk;
+        for(int i=1;i<=n;i++){
+            sumT[i]=sumT[i-1]+(answerKey.charAt(i-1)=='T'?1:0);
+            sumF[i]=sumF[i-1]+(answerKey.charAt(i-1)=='F'?1:0);
+        }
+        int ans1=bs(answerKey,sumT,k);
+        int ans2=bs(answerKey,sumF,k);
+        return ans1>ans2?ans1:ans2;
+    }
+
+    public int bs(String str,int[] sum,int k){
+        int n=str.length();
+        int l=1;
+        int r=n;
+        while(l<r){
+            int mid=(l+r+1)>>1;
+            if(check(str,sum,mid)){
+                l=mid;
+            }
+            else{
+                r=mid-1;
+            }
+        }
+        return l;
+    }
+
+    public boolean check(String str,int[] sum,int mid){
+        int n=str.length();
+        for(int i=0,j=mid-1;j<str.length();i++,j++){
+            if(sum[j+1]-sum[i-1+1]<=k){
+                return true;
+            }
+        }
+        return false;
+    }
+}
