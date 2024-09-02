@@ -1,0 +1,40 @@
+class Solution {
+    public int maxConsecutiveAnswers(String answerKey, int k) {
+        //题目可以转化为 可以修改k次的情况下,找到最长子串(子串内每个字符相同)
+        //对于最后的结果是T主导(case1)的最长,还是F主导(case2)的最长很难界定,所以通过两次寻找比较最后T主导和F主导谁最长
+        //滑动窗口
+        
+        //case1
+        int ans1=0;
+        int debt1=0;//记录窗口内有多少F
+        for(int l=0,r=0;r<answerKey.length();r++){
+            if(answerKey.charAt(r)=='F'){
+                debt1++;
+            }
+            while(l<answerKey.length()&&debt1>k){//窗口内F的次数大于修改的次数,必须要缩窗口
+                if(answerKey.charAt(l)=='F'){
+                    debt1--;
+                }
+                l++;
+            }
+            ans1=Math.max(ans1,r-l+1);
+        }
+
+        //case2
+        int ans2=0;
+        int debt2=0;//记录窗口内有多少T
+        for(int l=0,r=0;r<answerKey.length();r++){
+            if(answerKey.charAt(r)=='T'){
+                debt2++;
+            }
+            while(l<answerKey.length()&&debt2>k){
+                if(answerKey.charAt(l)=='T'){
+                    debt2--;
+                }
+                l++;
+            }
+            ans2=Math.max(ans2,r-l+1);
+        }
+        return ans1>ans2?ans1:ans2;
+    }
+}
