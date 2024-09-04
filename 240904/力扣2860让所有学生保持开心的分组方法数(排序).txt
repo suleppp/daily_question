@@ -1,0 +1,17 @@
+class Solution {
+    public int countWays(List<Integer> nums) {
+        //翻译题意就是选中的人的分数都要小于选中的人数
+        //没有选中的人的分数都大于选中的人数
+        //从小到大排序后,选中的人数i要大于nums[i-1],要小于nums[i]
+        Collections.sort(nums);
+        int ans=nums.get(0)>0?1:0;//最小的数都大于选的人数为0,一个都不用选,方案加1
+        for(int i=0;i<nums.size()-1;i++){
+            if(i+1>nums.get(i)&&i+1<nums.get(i+1)){//i为1的时候,其实能选两个
+                ans++;
+            }
+        }
+        //要考虑到全选,即最大的分数小于总人数
+        ans+=nums.get(nums.size()-1)<nums.size()?1:0;
+        return ans;
+    }
+}
