@@ -1,0 +1,24 @@
+class Solution {
+    public String clearDigits(String str) {
+        //单调栈
+        //如果数字来了,栈不为空,且栈顶为非数字字符
+        char[] s=str.toCharArray();
+        int n=s.length;
+        char[] stk=new char[n];
+        int r=0;
+        String ans="";
+        for(int i=0;i<n;i++){
+            if(s[i]>='0'&&s[i]<='9'){
+                if(r>0&&(stk[r-1]<'0'||stk[r-1]>'9')){
+                    r--;
+                    continue;
+                }
+            }
+            stk[r++]=s[i];
+        }
+        for(int i=0;i<r;i++){
+            ans+=stk[i];
+        }
+        return ans;
+    }
+}
