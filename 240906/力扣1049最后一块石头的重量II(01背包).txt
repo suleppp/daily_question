@@ -1,0 +1,32 @@
+class Solution {
+    public int lastStoneWeightII(int[] stones) {
+        //01背包
+        //说白了就是将石头分为两组,将两组累加和相减后的值最小
+        //也就是让两组累加和相近
+        int sum=0;
+        for(int n:stones){
+            sum+=n;
+        }
+        int groupA=zeroone(stones,sum/2);//如果sum=21,那么weight就是10,a组也就是两组中重量最小的
+        int groupB=sum-groupA;
+        return groupB-groupA;
+    }
+
+    //在前i个数里选取一组子序列,要求这个子序列的和最大但是不超过weight
+    public int zeroone(int[] nums,int weight){
+        int n=nums.length;
+        int[][] dp=new int[n+1][weight+1];
+        dp[0][0]=0;//没有数并且容量<=0 的 最大价值(重量) 为0
+        for(int i=1;i<=n;i++){
+            int num=nums[i-1];
+            dp[i][0]=0;
+            for(int j=1;j<=weight;j++){
+                dp[i][j]=dp[i-1][j];
+                if(j-num>=0){//当前容量能放下
+                    dp[i][j]=Math.max(dp[i][j],dp[i-1][j-num]+num);
+                }
+            }
+        }
+        return dp[n][weight];
+    }
+}
