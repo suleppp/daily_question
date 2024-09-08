@@ -1,0 +1,27 @@
+class Solution {
+    public int[] sortedSquares(int[] nums) {
+        //O(n)时间复杂度解决这个问题就需要用双指针
+        //为什么用双指针?该题存在一个单调性
+        //因为每个数都要平方,最后的结果肯定是正数
+        //那么nums本身是非递减的,最后平方的结果大的  肯定是越小的和越大的
+        //例如-3 -2 -1 0 1 2 3,最后平方的结果最大的肯定是(-3)^2和(3)^2
+        //因此可以用双指针,从两边开始,指针往中间走,结果的数值肯定是越来越小的
+        //在这个过程中进行比较,大的就放进答案数组的末尾
+        int n=nums.length;
+        int[] ans=new int[n];
+        int l=0,r=n-1;
+        for(int i=n-1;i>=0;i--){
+            int lval=nums[l]*nums[l];
+            int rval=nums[r]*nums[r];
+            if(lval>=rval){
+                ans[i]=lval;
+                l++;
+            }
+            else{
+                ans[i]=rval;
+                r--;
+            }
+        }
+        return ans;
+    }
+}
