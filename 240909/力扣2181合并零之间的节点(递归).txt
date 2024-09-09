@@ -1,0 +1,15 @@
+class Solution {
+    public ListNode mergeNodes(ListNode head) {
+        //递归
+        if(head==null||head.next==null) return null;
+        ListNode cur=head.next;
+        int sum=0;
+        while(cur.val!=0){
+            sum+=cur.val;
+            cur=cur.next;
+        }
+        ListNode tail=new ListNode(sum);
+        tail.next=mergeNodes(cur);
+        return tail;
+    }
+}
