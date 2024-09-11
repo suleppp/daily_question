@@ -1,0 +1,17 @@
+class Solution {
+    public String destCity(List<List<String>> paths) {
+        //由于不会形成环,起点和终点的个数肯定只有一个,保存所有起点信息后,再比对终点,
+        //如果不在起点信息中,那就是终点,因为终点个数只有一个并且肯定在数组末尾
+        HashSet<String> set=new HashSet<>();
+        for(List<String> path:paths){
+            set.add(path.get(0));
+        }
+
+        for(List<String> path:paths){
+            if(!set.contains(path.get(1))){
+                return path.get(1);
+            }
+        }
+        return "";
+    }
+}

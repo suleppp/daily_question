@@ -1,0 +1,71 @@
+
+
+import java.io.*;
+import java.util.Arrays;
+
+//分组背包
+//分成组后,从每组中挑选一个物品,逻辑和01背包差不多
+
+public class Main {
+    public static int MAXN=1001;
+    public static int MAXM=1001;
+
+    /*0体积 1价值 2组号*/
+    public static int[][] arr=new int[MAXN][3];
+
+    public static int m,n;//物品n个,背包总容量m
+
+    public static void main(String[] args) throws IOException{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StreamTokenizer in = new StreamTokenizer(br);
+        PrintWriter out = new PrintWriter(new OutputStreamWriter(System.out));
+        while(in.nextToken()!=StreamTokenizer.TT_EOF){
+            m=(int)in.nval;
+            in.nextToken();
+            n=(int)in.nval;
+            for(int i=1;i<=n;i++){
+                in.nextToken();
+                arr[i][0]=(int)in.nval;
+                in.nextToken();
+                arr[i][1]=(int)in.nval;
+                in.nextToken();
+                arr[i][2]=(int)in.nval;
+            }
+            Arrays.sort(arr,1,n+1,(a,b)->a[2]-b[2]);
+            out.print(compute1());
+        }
+        out.flush();
+        out.close();
+        br.close();
+    }
+
+    //严格位置依赖的动态规划
+    public static int compute1(){
+        //遍历组          遍历每个物品(01背包)
+        //遍历背包容量     遍历背包容量(01背包)
+        //遍历每个物品
+        int team=1;
+        for(int i=2;i<=n;i++){
+            if(arr[i][2]!=arr[i-1][2]) team++; //看看有多少组
+        }
+
+        int[][] dp=new int[team+1][m+1];//初始化的时候
+
+        for(int start=1,end=2,i=1;start<=n;i++){//i每次++就代表进入新一组,然后start,end开始重新标记
+            while (end<=n&&arr[end][2]==arr[start][2]){//start...end-1为一组
+                end++;
+            }
+
+            for(int j=0;j<=m;j++){
+                dp[i][j]=dp[i-1][j];
+                for(int k=start;k<=end-1;k++){
+                    if(j-arr[k][0]>=0){
+                        dp[i][j]=Math.max(dp[i][j],dp[i-1][j-arr[k][0]]+arr[k][1]);
+                    }
+                }
+            }
+            start=end++;
+        }
+        return dp[team][m];
+    }
+}
