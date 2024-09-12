@@ -1,0 +1,34 @@
+class Solution {
+    public int maxValueOfCoins(List<List<Integer>> piles, int m) {
+        //分组背包+前缀和
+        //题意为m次操作次数,每次只能从一个栈的栈顶中取硬币,一共m次能从这么多栈中取得的最大价值为多少
+        //分组背包是每个组中只能拿一件,由此可以将问题转化为:每个组可以取的方案数
+        //例如:一个栈中从栈顶到栈底元素为1 100 3 
+        //那么要么不取,要么方案1取栈顶1,价值为1,消耗次数1
+        //方案2取前两个,价值为101,消耗次数2
+        //方案3全取,价值104,消耗次数3
+        //而上面的计算可以用前缀和解决
+        int n=piles.size();//栈的个数(组的个数
+        int[][] dp=new int[n+1][m+1];//1-i组上,一共拿走j个硬币(消耗次数j次)的情况下取得的最大价值和
+        
+        for(int i=1;i<=n;i++){
+            List<Integer> team=piles.get(i-1);//第1,2,3...组
+            int t=Math.min(team.size(),m);//一个组中的硬币个数和操作次数比较,取小的值作为前多少的前缀和
+            //计算前缀和
+            int[] pre=new int[t+1];//pre[0]=0;
+            for(int j=0,sum=0;j<t;j++){
+                sum+=team.get(j);
+                pre[j+1]=sum;
+            }
+
+            //更新动态规划表
+            for(int j=0;j<=m;j++){
+                dp[i][j]=dp[i-1][j];
+                for(int k=1;k<=Math.min(t,j);k++){//一个组中前多少的前缀和与当前的操作次数比较
+                    dp[i][j]=Math.max(dp[i-1][j-k]+pre[k],dp[i][j]);
+                }
+            }
+        }
+        return dp[n][m];
+    }
+}
