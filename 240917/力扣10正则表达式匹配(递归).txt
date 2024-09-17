@@ -1,0 +1,40 @@
+class Solution {
+    public boolean isMatch(String str, String pat) {
+        //暴力递归
+        char[] s=str.toCharArray();
+        char[] p=pat.toCharArray();
+        return f1(s,p,0,0);
+    }
+    //s[i...]和p[j...]能不能匹配上,也就是i后面的能不能和j后面的匹配上
+    //p[j]一定不为 ' * '
+    public boolean f1(char[] s,char[] p,int i,int j){
+        if(s.length==i){
+            //i到达s的越界位置,此时j要么到达越界位置,要么为a*b*c*这样的后缀
+            if(p.length==j){
+                return true;
+            }
+            else {
+                //j后面一个位置存在并且为*    看看p[j+2]后面能不能都消掉
+                return j+1<p.length&&p[j+1]=='*'&&f1(s,p,i,j+2);
+            }
+        }
+        //又或者p后面没有了,那肯定后续匹配不上
+        else if(p.length==j){
+            return false;
+        }
+        else{
+            //第一种情况:j没有后缀了,要么后面那个不是"*",也就是说后面那个不是"*"
+            if(j+1==p.length||p[j+1]!='*'){
+                //那么当前字符必须匹配上 并且后面也能匹配上 才能保证正确
+                return ((s[i]==p[j])||p[j]=='.')&&f1(s,p,i+1,j+1);
+            }else{
+                //第二种情况:后面那个是"*"
+                    //如果能搞定当前位,就看看还能往后搞定多少
+                boolean b1=((s[i]==p[j])||p[j]=='.')&&f1(s,p,i+1,j);
+                    //如果搞不定就让当前位消失
+                boolean b2=f1(s,p,i,j+2);
+                return b1||b2;
+            }
+        }
+    }
+}
