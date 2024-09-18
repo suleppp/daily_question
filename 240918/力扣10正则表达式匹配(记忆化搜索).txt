@@ -1,0 +1,36 @@
+class Solution {
+    public boolean isMatch(String str, String pat) {
+        char[] s=str.toCharArray();
+        char[] p=pat.toCharArray();
+        int n=s.length;
+        int m=p.length;
+        //0表示没计算过,1为true,2为false
+        int[][] dp=new int[n+1][m+1];
+        return f(s,p,0,0,dp);
+    }
+
+    public boolean f(char[] s,char[] p,int i,int j,int[][] dp){
+        if(dp[i][j]!=0) return dp[i][j]==1;
+        boolean ans;
+        if(i==s.length){
+            if(j==p.length) ans=true;
+            else {
+                ans=j+1<p.length&&p[j+1]=='*'&&f(s,p,i,j+2,dp);
+            }
+        }
+        else if(j==p.length){
+            ans=false;
+        }
+
+        else{
+            if(j+1==p.length||p[j+1]!='*'){
+                ans=(s[i]==p[j]||p[j]=='.')&&f(s,p,i+1,j+1,dp);
+            }else{
+                ans=f(s,p,i,j+2,dp)||((s[i]==p[j]||p[j]=='.')&&f(s,p,i+1,j,dp));
+            }
+        }
+
+        dp[i][j]=ans?1:2;
+        return ans;
+    }
+}
