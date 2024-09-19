@@ -1,0 +1,48 @@
+class Solution {
+    public long countFairPairs(int[] nums, int lower, int upper) {
+        int n = nums.length;
+        long ans = 0L;
+        Arrays.sort(nums);
+        for (int i = 0; i < n; i++) {
+            // 避免和自己配对
+            ans += bs(nums, i + 1, n - 1, lower - nums[i], upper - nums[i]);
+        }
+        return ans;
+    }
+
+    public long bs(int[] nums, int i, int j, int lower, int upper) {
+        if(i>j) return 0;
+        int l = i;
+        int r = j;
+        
+        // 先找到第一个 >= lower 的位置
+        while (l < r) {
+            int mid = (l + r)>>1;
+            if (nums[mid] >= lower) {
+                r = mid;
+            } else {
+                l = mid+1;
+            }
+        }
+        int left = l; // 记录第一个 >= lower 的位置
+        if(nums[l]<lower) return 0;
+
+        l = i;
+        r = j;
+
+        // 再找到最后一个 <= upper 的位置
+        while (l < r) {
+            int mid = (l + r + 1)>>1;
+            if (nums[mid] <= upper) {
+                l = mid;
+            } else {
+                r = mid-1;
+            }
+        }
+        int right = r; // 记录最后一个 <= upper 的位置
+        if(nums[r]>upper) return 0;
+
+        // 返回有效范围内的数对数量
+        return Math.max(0, right - left + 1);
+    }
+}
