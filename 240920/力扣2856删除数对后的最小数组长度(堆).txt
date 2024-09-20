@@ -1,0 +1,23 @@
+class Solution {
+    public int minLengthAfterRemovals(List<Integer> nums) {
+        //大根堆+贪心
+        //每次拿出堆中两个最大元素相互抵消一次
+        Map<Integer,Integer> map=new HashMap<>();
+        PriorityQueue<Integer> heap=new PriorityQueue<>((a,b)->b-a);
+        for(int num:nums){
+            map.put(num,map.getOrDefault(num,0)+1);
+        }
+        for(int count:map.values()){
+            heap.offer(count);
+        }
+
+        while(heap.size()>1){
+            int t1=heap.poll();
+            int t2=heap.poll();
+            t1--;t2--;
+            if(t1>0) heap.offer(t1);
+            if(t2>0) heap.offer(t2);
+        }
+        return heap.isEmpty()?0:heap.peek();
+    }
+}
