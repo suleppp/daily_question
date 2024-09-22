@@ -1,0 +1,24 @@
+class Solution {
+    public int minEatingSpeed(int[] piles, int h) {
+        int n=piles.length;
+        Arrays.sort(piles);
+        int l=1;
+        int r=piles[n-1];
+        while(l<r){
+            int mid=(l+r)>>1;
+            if(check(piles,h,mid)){
+                r=mid;
+            }
+            else l=mid+1;
+        }
+        return l;
+    }
+
+    public boolean check(int[] piles,int h,int k){
+        int time=0;
+        for(int i=0;i<piles.length;i++){
+            time+=(piles[i]+k-1)/k;//向上取整
+        }
+        return time<=h;
+    }
+}
