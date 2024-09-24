@@ -1,0 +1,25 @@
+class Solution {
+    public long maximumSubsequenceCount(String text, String pattern) {
+        //先算出原本字符串有多少子序列
+        //再看看插入到头或者尾哪个更优
+        char[] t=text.toCharArray();
+        char[] p=pattern.toCharArray();
+        int n=t.length;
+        long[] suffixSum=new long[n+1];
+        for(int i=n-1;i>=0;i--){
+            suffixSum[i]=suffixSum[i+1];
+            if(t[i]==p[1]) suffixSum[i]+=1;
+        }
+        long preSum=0;//统计p[0]个数
+        long ans=0;
+        for(int i=0;i<n;i++){
+            if(t[i]==p[0]){
+                ans+=suffixSum[i+1];
+                preSum++;
+            }
+        }
+        //看看插头还是插尾
+        ans+=Math.max(suffixSum[0],preSum);
+        return ans;
+    }
+}
