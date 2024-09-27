@@ -1,0 +1,22 @@
+class Solution {
+    public int takeCharacters(String str, int k) {
+        //转换题意,取中间的子串,要求子串中的每个字母个数最多都为num-k个
+        char[] s=str.toCharArray();
+        int n=s.length;
+        int[] cnt={-k,-k,-k};
+        for(int i=0;i<n;i++){
+            cnt[s[i]-'a']++;
+        }
+        if(cnt[0]<0||cnt[1]<0||cnt[2]<0) return -1;
+        //遍历之后的数组的值就是每个字母最多的个数
+        int len=0;
+        for(int l=0,r=0;r<n;r++){
+            cnt[s[r]-'a']--;
+            while(cnt[s[r]-'a']<0){
+                cnt[s[l++]-'a']++;
+            }
+            len=Math.max(len,r-l+1);
+        }
+        return n-len;
+    }
+}
