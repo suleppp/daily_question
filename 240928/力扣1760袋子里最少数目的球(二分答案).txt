@@ -1,0 +1,27 @@
+class Solution {
+    public int minimumSize(int[] nums, int maxOperations) {
+        //关键问题是如何划分袋中球,让其每一份都小于等于limit
+        //上取整减一,20个小球,每份不超过7个只需要3个袋子,加上原本的一个袋子,一共2次操作
+        Arrays.sort(nums);
+        int n=nums.length;
+        int l=1;
+        int r=nums[n-1];
+        while(l<r){
+            int mid=(l+r)>>1;
+            if(check(nums,maxOperations,mid)){
+                r=mid;
+            }
+            else l=mid+1;
+        }
+        return l;
+    }
+
+    public boolean check(int[] nums,int maxOperations,int limit){
+        int trueOperations=0;
+        for(int i=0;i<nums.length;i++){
+            if(nums[i]<=limit) continue;
+            trueOperations+=(nums[i]+limit-1)/limit-1;
+        }
+        return trueOperations<=maxOperations;
+    }
+}
