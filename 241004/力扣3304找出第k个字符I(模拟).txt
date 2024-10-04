@@ -1,0 +1,19 @@
+class Solution {
+    public char kthCharacter(int k) {
+        //模拟
+        char[] str=new char[510];
+        str[0]='a';
+        int i=1;
+        while(i<510){
+            int temp=i;
+            int j=0;
+            while(j<temp){
+                str[i]=(char)((str[j]-'a'+1)%26+'a');
+                i++;
+                j++;
+                if(i==510) break;
+            }
+        }
+        return str[k-1];
+    }
+}
