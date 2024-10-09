@@ -1,0 +1,27 @@
+class Solution {
+public:
+    int minimumDifference(vector<int>& nums, int k) {
+        //灵神logtrick算法
+        //用于解决子数组问题，例如此题要找到最接近k的按位或子数组
+        //那么必然需要保存子数组的状态，例如：a[0]|a[1]|[2],a[0]|a[1],a[1]|a[2]...
+        //我们可以让 0号位保存[0..i]所有位的或，让 1号位保存[1.i]所有位的或，以此类推
+        //这样就记录了所有子数组的按位或的结果
+        //那么问题来了？这不就是二重循环吗，时间复杂度并不低
+        //那就需要设置特殊的退出条件，用到了集合的思想
+        //或运算就是or，or在集合中是越或越大的，当新来的这个数Ai与前面的数(集合)Aj或完后
+        //发现并没有让Aj这个集合变大，也就是Ai|Aj==Aj，那就说明Ai是Aj的子集，而Aj本身也是
+        //前面集合的子集，那么Ai和前面的集合或也不会让前面的集合变大,内层循环也就没必要跑了
+        //对于扩大 子数组按位或的结果 数量 没意义
+        //然后继续下一个Ai继续尝试
+        int ans=INT_MAX;
+        for(int i=0;i<nums.size();i++){
+            int num=nums[i];
+            ans=min(ans,abs(num-k));
+            for(int j=i-1;j>=0&&(nums[j]|num)!=nums[j];j--){
+                nums[j]|=num;
+                ans=min(ans,abs(nums[j]-k));
+            }
+        }
+        return ans;
+    }
+};
