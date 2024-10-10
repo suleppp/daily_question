@@ -1,0 +1,31 @@
+class Solution {
+public:
+    long long numberOfPairs(vector<int>& nums1, vector<int>& nums2, int k) {
+        //统计nums1的因子:例如nums1:[6,10] nums2:[2,3]
+        //6的因子:1,2,3,6    10的因子:1,2,5,10
+        //那么要求6能和nums2中几个配对(被整除),也就是看nums2中有几个是6的因子
+        unordered_map<long long,long long> mp;
+        long long ans=0;
+        for(int i=0;i<nums1.size();i++){
+            int temp=nums1[i];
+            //要想被k*nums2[?]整除,起码要满足被k整除和被nums2[?]整除
+            if(temp%k!=0) continue;
+            temp/=k;
+            int y=1;
+            while(y*y<=temp){
+                if(temp%y==0){
+                    mp[y]++;
+                    //因子总是成对出现,但也要避免重复统计
+                    if(y*y<temp){
+                        mp[temp/y]++;
+                    }
+                }
+                y++;
+            }
+        }
+        for(int num:nums2){
+            ans+=mp.contains(num)?mp[num]:0;
+        }
+        return ans;
+    }
+};
