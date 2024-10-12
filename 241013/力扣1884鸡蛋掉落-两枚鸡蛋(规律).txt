@@ -1,0 +1,13 @@
+class Solution {
+    public int twoEggDrop(int n) {
+        //根据样例2找规律
+        //9 22 34 45 55 64 72 79 85 90 94 97 99 100
+        // 13 12 11 10 9  8  7  6  5  4  3  2  1
+        return sub(n,1)+1;
+    }
+
+    public int sub(int n,int a){
+        if(n-a<=0) return 0;
+        return sub(n-a,a+1)+1;
+    }
+}
