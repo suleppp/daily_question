@@ -1,0 +1,26 @@
+class Solution {
+    public boolean find132pattern(int[] nums) {
+        //先确定两个数,再想第三个数
+        //就拿j位置和k位置的数来说,k作为后面的数要小于j位置的数
+        //单调栈,小压大,从后往前,当要出栈的时候,说明是前面的数大于了后面的数
+        //这满足j<k并且[j]>[k],这个时候已经确定了两个数,而i位置也在前面,对于i来说
+        //只需要满足[i]<[k]即可
+        //当[k]没有被确定的时候,说明前面并没有比后面大的数
+        //[k]和[j]也是动态更新的,[k]被更新的越大,就说明前面有更大的[j],既满足位置条件也满足大小条件
+        //而遍历到当前位置一定是i,也一定是在j和k的前面,因此只要满足[i]<[k]即可
+        int n=nums.length;
+        int[] stk=new int[n];
+        int r=0;
+        int k=Integer.MIN_VALUE;
+        for(int i=n-1;i>=0;i--){
+            if(nums[i]<k) return true;
+            while(r>0&&nums[i]>nums[stk[r-1]]){
+                //前面有更大的元素,更新k
+                k=Math.max(k,nums[stk[r-1]]);
+                r--;
+            }
+            stk[r++]=i;
+        }
+        return false;
+    }
+}
