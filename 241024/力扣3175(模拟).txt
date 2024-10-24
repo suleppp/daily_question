@@ -1,0 +1,24 @@
+class Solution {
+    public int findWinningPlayer(int[] skills, int k) {
+        int n=skills.length;
+        int[] cnt=new int[n];
+        Arrays.fill(cnt,0);
+        for(int i=0;i<n;){
+            for(int j=i+1;j<n;j++){
+                if(skills[i]>skills[j]){
+                    cnt[i]++;
+                    if(cnt[i]==k) return i;
+                    if(j==n-1) return i;
+                }
+                else{
+                    cnt[j]++;
+                    if(cnt[j]==k) return j;
+                    i=j;
+                    if(j==n-1) return j;
+                    break;
+                }
+            }
+        }
+        return 0;
+    }
+}
