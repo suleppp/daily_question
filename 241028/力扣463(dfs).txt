@@ -1,0 +1,38 @@
+class Solution {
+    public int islandPerimeter(int[][] grid) {
+        //首先确定怎么求出周长
+        //岛屿的周长就是岛屿方格与非岛屿方格(水域方格,边界)相邻的边的数量
+        //那么使用dfs,每次当从岛屿方格走向非岛屿方格的时候就将周长加1
+        //可以想象一下,根据先污染后治理的思路,从实例一第一行的岛屿方块
+        //出发,必然遍历四个方向,三个方向都是非岛屿方格(左右->水域,上->边界)
+        //累计周长3
+        int n=grid.length;
+        int m=grid[0].length;
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                if(grid[i][j]==1){
+                    return dfs(grid,i,j);
+                }
+            }
+        }
+        return 0;
+    }
+
+    public int dfs(int[][] grid,int i,int j){
+        if(i<0||i>=grid.length||j<0||j>=grid[0].length){//边界
+            return 1;
+        }
+        if(grid[i][j]==0) return 1;//不是陆地
+        if(grid[i][j]!=1) return 0;//遍历过了
+        grid[i][j]=2;
+        int[] dx=new int[]{-1,0,1,0};
+        int[] dy=new int[]{0,1,0,-1};
+        int ans=0;
+        for(int k=0;k<4;k++){
+            int xx=dx[k]+i;
+            int yy=dy[k]+j;
+            ans+=dfs(grid,xx,yy);
+        }
+        return ans;
+    }
+}
