@@ -1,0 +1,23 @@
+class Solution {
+    private static int N;
+    public List<String> validStrings(int n) {
+        //长度为n的二进制字符串中,零与零之间不相邻
+        N=n;
+        List<String> ans=new ArrayList<>();
+        dfs(ans,"");
+        return ans;
+    }
+
+    public void dfs(List<String> ans,String str){
+        if(str.length()==N){
+            ans.add(str);
+            return;
+        }
+        if(str.length()!=0&&str.charAt(str.length()-1)=='0'){
+            dfs(ans,str+"1");
+            return ;
+        }
+        dfs(ans,str+"1");
+        dfs(ans,str+"0");
+    }
+}
