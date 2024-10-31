@@ -1,0 +1,56 @@
+class Solution {
+    public int closedIsland(int[][] grid) {
+        //如果从一个 0 出发，向四方向移动，可以移动到网格图的边界（最外面一圈），
+        //那么这个 0 所处的岛屿就不是封闭的；反之，如果无法移动到网格图的边界，就是封闭的。
+        //因此可以从外界的0出发(第一行,最后一行,第一列,最后一列),把不是封闭岛屿的都污染
+        //剩下的0都是封闭岛屿了
+        int n=grid.length;
+        int m=grid[0].length;
+        boolean[][] vis=new boolean[n][m];
+        for(int j=0;j<m;j++){
+            if(grid[0][j]==0) {
+                dfs(0,j,grid,vis);
+            }
+            if(grid[n-1][j]==0){
+                dfs(n-1,j,grid,vis);
+            }
+        }
+
+        for(int i=0;i<n;i++){
+            if(grid[i][0]==0){
+                dfs(i,0,grid,vis);
+            }
+            if(grid[i][m-1]==0){
+                dfs(i,m-1,grid,vis);
+            }
+        }
+
+        int ans=0;
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                if(check(i,j,grid,vis)){
+                    dfs(i,j,grid,vis);
+                    ans++;
+                }
+            }
+        }
+        return ans;
+    }
+
+    private boolean check(int i,int j,int[][] grid,boolean[][] vis){
+        return i>=0&&i<grid.length&&j>=0&&j<grid[0].length&&grid[i][j]==0&&vis[i][j]==false;
+    }
+
+    private void dfs(int x,int y,int[][] grid,boolean[][] vis){
+        int[] dx=new int[]{0,-1,0,1};
+        int[] dy=new int[]{1,0,-1,0};
+        vis[x][y]=true;
+        for(int i=0;i<4;i++){
+            int xx=dx[i]+x;
+            int yy=dy[i]+y;
+            if(check(xx,yy,grid,vis)){
+                dfs(xx,yy,grid,vis);
+            }
+        }
+    }
+}
