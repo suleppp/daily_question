@@ -1,0 +1,12 @@
+class Solution {
+    public int minChanges(int n, int k) {
+        if((n&k)!=k) return -1;
+        int sub=n-k;
+        int ans=0;
+        while(sub>0){
+            if((sub&1)==1) ans++;
+            sub>>=1;
+        }
+        return ans;
+    }
+}
