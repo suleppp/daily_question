@@ -1,0 +1,48 @@
+class Solution {
+    private int n;
+    public int shoppingOffers(List<Integer> price, List<List<Integer>> special, List<Integer> needs) {
+        //先将每个单价都预处理为大礼包
+        //然后dfs过程中遍历所有礼包并判断遍历到的礼包是否合法,合法就收录该礼包,dfs下个礼包
+        n=price.size();
+        List<Integer> common=new ArrayList<>();
+        for(int i=0;i<n;i++){
+            common.add(0);
+        }
+        for(int i=0;i<n;i++){
+            List<Integer> clone=new ArrayList<>(common);
+            clone.set(i,1);
+            clone.add(price.get(i));
+            special.add(clone);
+        }
+        Collections.reverse(special);
+        Map<List<Integer>, Integer> cache = new HashMap<>();
+        return dfs(price,special,needs,cache);
+    }
+
+    public int dfs(List<Integer> price, List<List<Integer>> special, List<Integer> needs,Map<List<Integer>,Integer> cache){
+        if(cache.containsKey(needs)) return cache.get(needs);
+        for(int i=0;i<n;i++){
+            if(needs.get(i)>0) break;
+            if(needs.get(i)==0&&i==n-1) return  0;
+        }
+        int ans=Integer.MAX_VALUE;
+        //遍历所有礼包
+        for(List<Integer> s:special){
+            boolean flag=false;
+            List<Integer> cur=new ArrayList<>(needs);
+            //遍历每个礼包中的数量是否符合要求
+            for(int i=0;i<n;i++){
+                if(cur.get(i)<s.get(i)){
+                    flag=true;
+                    break;
+                }
+                cur.set(i,cur.get(i)-s.get(i));
+            }
+            if(!flag){//礼包合法
+                ans=Math.min(ans,s.get(n)+dfs(price,special,cur,cache));//将还需要的多少传给下一个dfs
+            }
+        }
+        cache.put(needs,ans);
+        return ans;
+    }
+}
