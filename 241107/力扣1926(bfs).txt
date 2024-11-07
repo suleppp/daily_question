@@ -1,0 +1,40 @@
+class Solution {
+public:
+    int dx[4]={0,-1,0,1};
+    int dy[4]={-1,0,1,0};
+    int nearestExit(vector<vector<char>>& maze, vector<int>& entrance) {
+        int x=entrance[0];
+        int y=entrance[1];
+        int ans=bfs(maze,x,y);
+        return ans==INT_MAX?-1:ans;
+    }
+
+    int bfs(vector<vector<char>>& maze,int x,int y){
+        queue<pair<int,int>> que;
+        int n=maze.size();
+        int m=maze[0].size();
+        que.push({x*m+y,0});
+        maze[x][y]='+';
+        while(!que.empty()){
+            pair<int,int> pr=que.front();
+            que.pop();
+            int curx=pr.first/m;
+            int cury=pr.first%m;
+            int step=pr.second;
+            //curx有可能等于x,cury也有可能等于y,只要两者不同时想等就行,不要写错了判断条件
+            if((curx==0||curx==n-1||cury==0||cury==m-1)&&!(curx==x&&cury==y)){
+                    return step;
+            }
+            for(int i=0;i<4;i++){
+                int nx=curx+dx[i];
+                int ny=cury+dy[i];
+                if(nx<0||nx>=n||ny<0||ny>=m) continue;
+                if(maze[nx][ny]=='.'){
+                    que.push({nx*m+ny,step+1});
+                    maze[nx][ny]='+';
+                }
+            }
+        }
+        return INT_MAX;
+    }
+};
