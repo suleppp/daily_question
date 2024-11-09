@@ -1,0 +1,41 @@
+class NeighborSum {
+public:
+    int dxy[8][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}, {1, 1}, {-1, 1}, {-1, -1}, {1, -1}};
+    vector<vector<int>> sum;
+    
+    NeighborSum(vector<vector<int>>& grid) {
+        int n = grid.size();
+        sum = vector<vector<int>>(n * n, vector<int>(2, 0));
+        
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                int num = grid[i][j];
+                for (int k = 0; k < 8; k++) {
+                    int nx = i + dxy[k][0], ny = j + dxy[k][1];
+                    if (nx >= 0 && nx < n && ny >= 0 && ny < n) {
+                        if (k < 4) {
+                            sum[num][0] += grid[nx][ny];  // 邻接方向
+                        } else {
+                            sum[num][1] += grid[nx][ny];  // 对角线方向
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    int adjacentSum(int value) {
+        return sum[value][0];
+    }
+    
+    int diagonalSum(int value) {
+        return sum[value][1];
+    }
+};
+
+/**
+ * Your NeighborSum object will be instantiated and called as such:
+ * NeighborSum* obj = new NeighborSum(grid);
+ * int param_1 = obj->adjacentSum(value);
+ * int param_2 = obj->diagonalSum(value);
+ */
