@@ -1,0 +1,22 @@
+class Solution {
+public:
+    int singleNonDuplicate(vector<int>& nums) {
+        //对于只会出现一个的那个数来说
+        //这个数必定是偶数下标
+        //这个数的左边成对元素的第一个数的下标也必定是偶数下标
+        //这个数的右边成对元素的第一个数的下标变成了奇数下标
+        int n=nums.size();
+        int l=0,r=n-1;
+        while(l<r){
+            int mid=(l+r)>>1;
+            if(mid%2==0){
+                if(mid+1<n&&nums[mid]==nums[mid+1]) l=mid+1;
+                else r=mid;
+            }else{
+                if(mid-1>=0&&nums[mid]==nums[mid-1]) l=mid+1;
+                else r=mid;
+            }
+        }
+        return nums[l];
+    }
+};
