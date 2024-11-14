@@ -1,0 +1,25 @@
+class Solution {
+public:
+    int ans=0;
+    int numWays(int n, vector<vector<int>>& relation, int k) {
+        for(int i=0;i<relation.size();i++){
+            if(relation[i][0]==0){
+                dfs(relation[i][1],relation,k-1,n);
+            }
+        }
+        return ans;
+    }
+
+    void dfs(int start,vector<vector<int>>& relation,int k,int n){
+        if(k==0){
+            ans=start==n-1?ans+1:ans;
+            return;
+        }
+
+        for(int i=0;i<relation.size();i++){
+            if(relation[i][0]==start){
+                dfs(relation[i][1],relation,k-1,n);
+            }
+        }
+    }
+};
