@@ -1,0 +1,14 @@
+class Solution {
+public:
+    int numIdenticalPairs(vector<int>& nums) {
+        vector<int> cnts=vector<int>(105,0);
+        for(int i=0;i<nums.size();i++){
+            cnts[nums[i]]++;
+        }
+        int ans=0;
+        for(int i=0;i<cnts.size();i++){
+            ans+=cnts[i]*(cnts[i]-1)/2;
+        }
+        return ans;
+    }
+};
