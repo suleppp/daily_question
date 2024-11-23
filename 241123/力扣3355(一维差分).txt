@@ -1,0 +1,30 @@
+class Solution {
+public:
+    static const int N=1e5+10;
+    int b[N]={0};
+    void insert(int l,int r,int val){
+        b[l]+=val;
+        b[r+1]-=val;
+    }
+    bool isZeroArray(vector<int>& nums, vector<vector<int>>& queries) {
+        //差分
+        int mx=0;
+        for(int i=0;i<nums.size();i++){
+            insert(i+1,i+1,nums[i]);
+            mx=max(mx,nums[i]);
+        }
+        for(int i=0;i<queries.size();i++){
+            auto q=queries[i];
+            int l=q[0];
+            int r=q[1];
+            insert(l+1,r+1,-1);
+            mx=max(mx,r);
+        }
+        int sum=0;
+        for(int i=1;i<=mx;i++){
+            b[i]+=b[i-1];
+            if(b[i]>0) return false;
+        }
+        return true;
+    }
+};
