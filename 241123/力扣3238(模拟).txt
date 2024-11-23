@@ -1,0 +1,24 @@
+class Solution {
+public:
+    int winningPlayerCount(int n, vector<vector<int>>& pick) {
+        //看数据量,模拟
+        int ans=0;
+        vector<vector<int>> nums=vector<vector<int>>(n,vector<int>(11,0));
+        for(int i=0;i<pick.size();i++){
+            auto p=pick[i];
+            int x=p[0];
+            int y=p[1];
+            nums[x][y]++;
+        }
+        for(int i=0;i<n;i++){
+            auto temp=nums[i];
+            for(int j=0;j<=10;j++){
+                if(temp[j]>i){
+                    ans++;
+                    break;
+                }
+            }
+        }
+        return ans;
+    }
+};
