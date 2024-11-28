@@ -1,0 +1,40 @@
+class Solution {
+public:
+    vector<int> fa;
+    int cnt;
+    int makeConnected(int n, vector<vector<int>>& connections) {
+        int needLine=n-1;
+        build(n);
+        cnt=n;
+        for(int i=0;i<connections.size();i++){
+            needLine--;
+            unionSet(connections[i][0],connections[i][1]);
+        }
+        if(needLine>0) return -1;
+        return cnt-1;
+    }
+
+    void build(int n){
+        fa.resize(n);
+        for(int i=0;i<n;i++){
+            fa[i]=i;
+        }
+    }
+
+
+    int findFa(int x){
+        if(x!=fa[x]){
+            fa[x]=findFa(fa[x]);
+        }
+        return fa[x];
+    }
+
+    void unionSet(int x,int y){
+        int fx=findFa(x);
+        int fy=findFa(y);
+        if(fx!=fy){
+            cnt--;
+            fa[fx]=fy;
+        }
+    }
+};
