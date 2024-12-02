@@ -1,0 +1,47 @@
+class Solution {
+public:
+    vector<int> remainingMethods(int n, int k, vector<vector<int>>& invocations) {
+        vector<bool> vis(n, false); // true表示是可疑方法
+        vector<vector<int>> grid(n);
+        
+        // 构建图，grid[i] 表示方法 i 调用了哪些方法
+        for (auto& invo : invocations) {
+            grid[invo[0]].push_back(invo[1]);
+        }
+        
+        // 遍历并标记所有可疑方法
+        dfs(k, grid, vis);
+        
+        // 如果有非可疑方法调用了可疑方法，就说明可疑方法移除后这个非可疑方法也没法执行
+        // 构建反向图来检查哪些方法依赖于可疑方法
+        vector<int> finalAns;
+        
+        // 遍历所有方法，找到所有未被标记为可疑的节点
+        for (int i = 0; i < n; ++i) {
+            if (!vis[i]) {
+                finalAns.push_back(i);
+            }
+        }
+        
+        // 需要检查是否存在未标记为可疑的方法，调用了可疑方法。如果有，则不能移除可疑方法
+        for (auto& invo : invocations) {
+            if (!vis[invo[0]] && vis[invo[1]]) {
+                // 如果非可疑方法调用了可疑方法，返回0到n-1的数组
+                vector<int> ans(n);
+                for(int i=0;i<n;i++) ans[i]=i;
+                return ans;
+            }
+        }
+
+        return finalAns;
+    }
+
+    // 标记从方法cur开始的所有可疑方法
+    void dfs(int cur, vector<vector<int>>& grid, vector<bool>& vis) {
+        if (vis[cur]) return;
+        vis[cur] = true;
+        for (auto& point : grid[cur]) {
+            dfs(point, grid, vis);
+        }
+    }
+};
