@@ -1,0 +1,16 @@
+class Solution {
+    public boolean checkTwoChessboards(String coordinate1, String coordinate2) {
+      //找规律
+      int a=coordinate1.charAt(0)-'a'+1;
+      int b=coordinate1.charAt(1)-'0';
+      //true为白，false为黑
+      boolean flag1=true;
+      if((a&1)==(b&1)) flag1=false;
+      
+      int c=coordinate2.charAt(0)-'a'+1;
+      int d=coordinate2.charAt(1)-'0';
+      boolean flag2=true;
+      if((c&1)==(d&1)) flag2=false;
+      return flag2==flag1;
+    }
+}
