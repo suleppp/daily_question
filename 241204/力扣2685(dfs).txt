@@ -1,0 +1,33 @@
+class Solution {
+public:
+    int point=0;
+    int bian=0;
+    int countCompleteComponents(int n, vector<vector<int>>& edges) {
+        vector<vector<int>> graph(n);
+        for(auto& e:edges){
+            graph[e[0]].push_back(e[1]);
+            graph[e[1]].push_back(e[0]);
+        }
+        int ans=0;
+        vector<bool> vis(n,false);
+        for(int i=0;i<n;i++){
+            if(!vis[i]){
+                dfs(i,graph,vis);
+                if((point-1)*point/2==bian/2) ans++;
+                point=0;
+                bian=0;
+            }
+        }
+        return ans;
+    }
+
+    void dfs(int start,vector<vector<int>>& graph,vector<bool>& vis){
+        if(vis[start]) return;
+        vis[start]=true;
+        point++;
+        bian+=graph[start].size();
+        for(auto& p:graph[start]){
+            dfs(p,graph,vis);
+        }
+    }
+};
