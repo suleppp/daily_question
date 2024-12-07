@@ -1,0 +1,19 @@
+class Solution {
+public:
+    bool canAliceWin(int n) {
+        int cnt=0;//下一轮是谁
+        int num=10;
+
+        while(n){
+            if(n>=num){
+                n-=num;
+                cnt++;
+                num--;
+            }
+            else{
+                break;
+            }
+        }
+        return cnt%2==0?false:true;
+    }
+};
