@@ -1,0 +1,28 @@
+class Solution {
+    public int minSetSize(int[] arr) {
+        int n=arr.length;
+        int need=n/2;
+        PriorityQueue<Integer> heap=new PriorityQueue<>((a,b)->{return b-a;});
+        Arrays.sort(arr);
+        for(int l=0,r=0,cnt=0;r<n;r++){
+            if(arr[l]==arr[r]){
+                cnt++;
+            }
+            else{
+                heap.offer(cnt);
+                l=r;
+                cnt=1;
+            }
+            if(r==n-1){
+                heap.offer(r-l+1);
+            }
+        }
+        int ans=0;
+        while(!heap.isEmpty()) {
+            n -= heap.poll();
+            ans++;
+            if (n <= need) break;
+        }
+        return ans;
+    }
+}
