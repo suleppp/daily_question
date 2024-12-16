@@ -1,0 +1,54 @@
+class Solution {
+    public double maxAmount(String initialCurrency, List<List<String>> pairs1, double[] rates1, List<List<String>> pairs2, double[] rates2) {
+        //通过pairs建邻接表,然后通过这张图遍历当前货币能兑换多少初始货币
+        //把这些放进map中,key为货币种类,val为基于初始货币能兑换当前货币的价值
+        //把以上操作相对于day1和day2都做一次,这样会有两个map
+        //遍历day1产生的map,看这个货币种类在day2产生的map中能不能找到
+        //能找到,就用val1*(1/val2),因为两个map的val都是初始货币兑换当前货币的价值,所以要用倒数
+        Map<String,Double> day1Amount=operate(initialCurrency,pairs1,rates1);
+        Map<String,Double> day2Amount=operate(initialCurrency,pairs2,rates2);
+        double ans=0D;
+        for(Map.Entry<String,Double> elem:day1Amount.entrySet()){
+            if(day2Amount.containsKey(elem.getKey())){
+                ans=Math.max(ans,elem.getValue()/day2Amount.get(elem.getKey()));
+            }
+        }
+        return ans;
+    }
+    
+    //java16新特性
+    private record Pair(String end,double rate){}
+
+    private Map<String,Double> operate(String initialCurrency,List<List<String>> pairs, double[] rates){
+        Map<String,List<Pair>> graph=new HashMap<>();
+        for(int i=0;i<pairs.size();i++){
+            String a=pairs.get(i).get(0);
+            String b=pairs.get(i).get(1);
+            double r=rates[i];
+            graph.putIfAbsent(a,new ArrayList<Pair>());
+            graph.get(a).add(new Pair(b,r));
+            graph.putIfAbsent(b,new ArrayList<Pair>());
+            graph.get(b).add(new Pair(a,1/r));
+        }
+        Map<String,Double> dayAmount=new HashMap<>();
+        dfs(initialCurrency,1,graph,dayAmount);
+        return dayAmount;
+    }
+
+    private void dfs(String nowCurrency,double curAmount,Map<String,List<Pair>> graph,Map<String,Double> dayAmount){
+        dayAmount.put(nowCurrency,curAmount);
+        //如果没有当前货币的兑换渠道,直接返回
+        if(!graph.containsKey(nowCurrency)){
+            return;
+        }
+        //如果有,就遍历所有兑换渠道
+        for(Pair p:graph.get(nowCurrency)){
+            String end=p.end;
+            double rate=p.rate;
+            if(!dayAmount.containsKey(end)){
+                dfs(end,curAmount*rate,graph,dayAmount);
+            }
+        }
+    }
+    
+}
