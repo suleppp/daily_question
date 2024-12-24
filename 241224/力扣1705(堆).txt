@@ -1,0 +1,40 @@
+class Solution {
+public:
+    int eatenApples(vector<int>& apples, vector<int>& days) {
+        //定义变量day用来记录当前第几天
+        //定义小根堆,元素pair<i,j>,first表示剩余的生命周期day+days[i](依据这个排序),second表示有多少苹果
+        //每来到一天先放入今日苹果,再取出小根堆堆顶元素,比较生命周期,如果在生命周期内,将苹果减少
+        //并放入堆中,如果过期,那么再取出堆顶直到有效
+        priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>> heap;
+        int day=0;//当前天数
+        int ans=0;
+        while(day<apples.size()||!heap.empty()){
+            //先今日苹果放入
+            if(day<apples.size()&&apples[day]>0){
+                heap.push({day+days[day],apples[day]});
+            }
+
+            //处理过期苹果
+             while(!heap.empty()&&heap.top().first<=day){
+                heap.pop();
+            }
+
+            /*
+            以上处理过期苹果不要写成while(!heap.empty()){处理过期苹果}
+            会因为堆不为空而进入死循环
+            */
+
+            //吃苹果
+            if(!heap.empty()){
+                auto tp=heap.top();
+                heap.pop();
+                ans++;
+                if(tp.second>1){
+                    heap.push({tp.first,tp.second-1});
+                }
+            }
+            day++;//进入新一天
+        }
+        return ans;
+    }
+};
