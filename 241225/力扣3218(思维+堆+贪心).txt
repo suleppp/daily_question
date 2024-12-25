@@ -1,0 +1,28 @@
+class Solution {
+public:
+    int minimumCost(int m, int n, vector<int>& hengCut, vector<int>& shuCut) {
+        //横着如果长度为m,那么要切第0,1,...,m-2刀
+        //竖着如果长度为n,那么要切第0,1,...,n-2刀
+        //怎么切总开销最小? 首先选择开销更大的切割线,并且一切切到底
+        //因为如果我们更晚的选择高开销的切割线，可能会被更多由低开销的切割线所切割出的矩形影响，反而导致更大的的总开销
+        priority_queue<int> hengHeap(hengCut.begin(),hengCut.end());
+        priority_queue<int> shuHeap(shuCut.begin(),shuCut.end());
+        int hengPart=1;
+        int shuPart=1;
+        int ans=0;
+        while(!hengHeap.empty()||!shuHeap.empty()){
+            if(shuHeap.empty()||(!hengHeap.empty()&&hengHeap.top()>=shuHeap.top())){
+                ans+=hengHeap.top()*hengPart;
+                hengHeap.pop();
+                shuPart++;
+            }
+            else{
+                ans+=shuHeap.top()*shuPart;
+                shuHeap.pop();
+                hengPart++;
+            }
+        }
+
+        return ans;
+    }
+};
