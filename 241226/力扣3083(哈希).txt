@@ -1,0 +1,16 @@
+class Solution {
+public:
+    bool isSubstringPresent(string s1) {
+        if(s1.size()<2) return false;
+        string s2=s1;
+        reverse(s2.begin(),s2.end());
+        map<string,int> mp;
+        for(int i=1;i<s1.size();i++){
+            mp.insert({s1.substr(i-1,2),666});
+        }
+        for(int i=1;i<s2.size();i++){
+            if(mp.find(s2.substr(i-1,2))!=mp.end()) return true;
+        }
+        return false;
+    }
+};
