@@ -1,0 +1,37 @@
+class Solution {
+public:
+    string rankTeams(vector<string>& votes) {
+        int candidate=votes[0].size();//统计有多少候选人
+        string ans="";
+        vector<vector<int>> candidateToVote(26,vector<int>(candidate,0));//每一位候选人在每一个排位上获取的票数
+        for(int i=0;i<votes.size();i++){
+            for(int j=0;j<votes[i].size();j++){
+                candidateToVote[votes[i][j]-'A'][j]++;
+            }
+        }
+        vector<pair<string,vector<int>>> candidateVotes;//将候选人和得票数据绑定在一起,方便后面排序
+        for(int i=0;i<26;i++){
+            candidateVotes.push_back({string(1,'A'+i),candidateToVote[i]});
+        }
+
+        // 1. 先按得票数排序
+        // 2. 如果得票数相同，按字母顺序排序
+        sort(candidateVotes.begin(),candidateVotes.end(),
+        [](const pair<string,vector<int>>& a,const pair<string,vector<int>>& b){
+                for(int i=0;i<a.second.size();i++){
+                    if(a.second[i]!=b.second[i]){
+                        return a.second[i]>b.second[i];
+                    }
+                }
+                return a.first<b.first;
+    });
+
+        int cnt=0;
+        for(const auto& item:candidateVotes){
+            if(cnt==candidate) break;
+            ans+=item.first;
+            cnt++;
+        }
+        return ans;
+    }
+};
