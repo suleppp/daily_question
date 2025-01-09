@@ -1,0 +1,33 @@
+class Solution {
+    public long validSubstringCount(String word1, String word2) {
+        //滑窗,判断窗口内字母个数是否大于等于word2字母个数
+        int n=word1.length();
+        int m=word2.length();
+        char[] w1=word1.toCharArray();
+        char[] w2=word2.toCharArray();
+        if(n<m) return 0L;
+        long ans=0L;
+        int[] w1Count=new int[26];
+        int[] w2Count=new int[26];
+        for(int i=0;i<m;i++){
+            w2Count[w2[i]-'a']++;
+        }
+
+        for(int i=0,j=0;j<n;j++){
+            w1Count[w1[j]-'a']++;
+            if(j-i+1<m)continue;
+            while(isValid(w1Count,w2Count)){
+                ans+=n-j;
+                w1Count[w1[i++]-'a']--;
+            }
+        }
+        return ans;
+    }
+
+    boolean isValid(int[] w1Count,int[] w2Count){
+        for(int i=0;i<26;i++){
+            if(w1Count[i]<w2Count[i]) return false;
+        }
+        return true;
+    }
+}
