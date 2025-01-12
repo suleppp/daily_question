@@ -1,0 +1,18 @@
+class Solution {
+    public int largestCombination(int[] candidates) {
+        //看看数组中所有数二进制的位上,可以最多多少个同时为1
+        Map<Integer,Integer> map=new HashMap<>();
+        for(int i=0;i<candidates.length;i++){
+            for(int j=1;j<=32;j++){
+                if(((candidates[i]>>j)&1)==1){
+                    map.put(j,map.getOrDefault(j,0)+1);
+                }
+            }
+        }
+        int ans=0;
+        for(int key:map.keySet()){
+            ans=Math.max(ans,map.get(key));
+        }
+        return ans;
+    }
+}
