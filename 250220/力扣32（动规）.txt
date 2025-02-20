@@ -1,0 +1,27 @@
+class Solution {
+    public int longestValidParentheses(String str) {
+        char[] s=str.toCharArray();
+        int n=s.length;
+        if(n==0) return 0;
+        int ans=0;
+        //定义dp[i]为在i下标上往左看能否找到与之匹配？如果能，是多少
+        int[] dp=new int[n];
+        //1.如果i下标上是（ 那么一定没法匹配
+        //2.如果i下标上是 ）那么看i-1位置上的dp[i-1],看i-1位置上与之匹配的位置在哪
+        //  然后我们根据这个，再往前看一位，如果是（ 那么匹配上了，再往这个（ 往前看
+        //  一位，因为有可能与之并列匹配
+        //3.在情况2的情况下，如果发现不能与i位置上的 ）匹配上，那么dp[i]=0
+        for(int i=0;i<n;i++){
+            if(s[i]=='('){
+                dp[i]=0;
+                continue;
+            }
+            if(i-1>=0&&i-dp[i-1]-1>=0&&s[i-dp[i-1]-1]=='('){
+                dp[i]=dp[i-1]+2;
+                if(i-dp[i-1]-1-1>=0) dp[i]+=dp[i-dp[i-1]-1-1];
+            }
+            ans=Math.max(ans,dp[i]);
+        }
+        return ans;
+    }
+}
