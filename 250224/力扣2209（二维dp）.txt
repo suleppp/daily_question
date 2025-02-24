@@ -1,0 +1,37 @@
+class Solution {
+    public int minimumWhiteTiles(String floor_tmp, int num, int len) {
+        char[] floor=floor_tmp.toCharArray();
+        int n=floor.length;
+        int[][] dp=new int[num+1][n+1];//当只有i条地毯的时候处于j位置 能铺的最多白砖数量
+        
+        int[] prefixSum=new int[n+1];
+        for(int i=1;i<=n;i++){
+            prefixSum[i]=prefixSum[i-1]+(floor[i-1]=='1'?1:0);
+        }
+
+        //初始化
+        for(int j=0;j<=n;j++){
+            dp[0][j]=0;
+        }
+        for(int i=0;i<=num;i++){
+            dp[i][0]=0;
+        }
+
+        for(int i=1;i<=num;i++){
+            for(int j=n-1;j>=0;j--){
+                //不铺地毯的情况
+                dp[i][j]=dp[i][j+1];
+                //铺地毯的情况
+                int end=Math.min(n,j+len);
+                int coverd=prefixSum[end]-prefixSum[j];
+                dp[i][j]=Math.max(dp[i-1][end]+coverd,dp[i][j]);
+            }
+        }
+
+        //总白砖数量
+        int total=prefixSum[n];
+        //最大白砖数
+        int mx=dp[num][0];
+        return total-mx;
+    }
+}
