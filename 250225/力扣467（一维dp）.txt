@@ -1,0 +1,34 @@
+class Solution {
+    public int findSubstringInWraproundString(String str) {
+        //因为答案相对固定，所以可以以某一字符做结尾算出其最长的子串，短的不用管，自动去重了
+        //最长的算出来了，那么不同的非空子串个数也就算出来了
+        //这个答案相对固定是什么意思？
+        //例如字符串为"zab...",以b作为结尾最长长度为3，那么答案只能为zab,ab,b
+        //不可能为其他的
+        char[] s=str.toCharArray();
+        int[] dp=new int[26];//以某一字符做结尾，最长长度是多少
+        for(int i=0,len=0;i<s.length;i++){
+            if(i==0){
+                dp[s[i]-'a']=1;
+                len++;
+                continue;
+            }
+
+            char pre=s[i-1];
+            char cur=s[i];
+            if((pre=='z'&&cur=='a')||(cur-pre==1)){
+                len++;
+                dp[cur-'a']=Math.max(dp[cur-'a'],len);
+            }else{
+                len=1;
+                dp[cur-'a']=Math.max(dp[cur-'a'],len);
+            }
+        }
+
+        int ans=0;
+        for(int i=0;i<26;i++){
+            ans+=dp[i];
+        }
+        return ans;
+    }
+}
