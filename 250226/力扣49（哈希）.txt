@@ -1,0 +1,46 @@
+class Solution {
+    public List<List<String>> groupAnagrams(String[] strs) {
+        //先将所有字符串变为原有的样子，存在新数组中
+        //在遍历这个新数组，将新字符串相同的原始字符串放进同一个map<newStr,List<oldStr>>中
+        //最后取出map中的所有元素
+        HashMap<String,List<String>> map=new HashMap<>();
+        String[] newStrs=new String[strs.length];
+        List<List<String>> ans=new ArrayList<>();
+        for(int i=0;i<strs.length;i++){
+            newStrs[i]=function(strs[i]);
+        }
+
+        for(int i=0;i<newStrs.length;i++){
+            String newStr=newStrs[i];
+            List<String> list=map.getOrDefault(newStr,new ArrayList<String>());
+            list.add(strs[i]);
+            map.put(newStr,list);
+        }
+
+        for(var elem:map.values()){
+            ans.add(elem);
+        }
+        return ans;
+    }
+//TreeSet 会自动对字符进行排序，同时去除重复字符。
+//这导致如果两个字符串的字符相同，但字符顺序不同，
+//经过 TreeSet 转换后，它们会变成相同的字符串，从而无法正确分组。
+    private String errFunction(String str){
+        Set<Character> set=new TreeSet<>();
+        char[] char_str=str.toCharArray();
+        for(int i=0;i<char_str.length;i++){
+            set.add(char_str[i]);
+        }
+        StringBuilder sb=new StringBuilder();
+        for(char c:set){
+            sb.append(c);
+        }
+        return sb.toString();
+    }
+
+    private String function(String str) {
+        char[] charArray = str.toCharArray();
+        Arrays.sort(charArray);  
+        return new String(charArray);  
+    }
+}
