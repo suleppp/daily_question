@@ -1,0 +1,51 @@
+class Solution {
+        //要求O(n)的复杂度，肯定不能使用排序
+        //那么朴素的想法就是遍历一遍
+        //这一遍就将连续的数都存放在一起
+        //那么由此想到并查集，将连续的数放在一起
+        //到最后直接返回并查集中集合元素的最多的那个集合的数目
+    private HashMap<Integer,Integer> father=new HashMap<>();
+    private HashMap<Integer,Integer> size=new HashMap<>();
+    private int maxVal=1;
+
+    private int find(int x){
+        if(x!=father.get(x)){
+            father.put(x,find(father.get(x)));
+        }
+        return father.get(x);
+    }
+
+    private void union(int x,int y){
+        int fx=find(x);
+        int fy=find(y);
+        if(fx!=fy){
+            if(fx>fy){
+                father.put(fy,fx);
+                size.put(fx,size.get(fx)+size.get(fy));
+            }
+            else{
+                father.put(fx,fy);
+                size.put(fy,size.get(fy)+size.get(fx));
+            }
+            maxVal=Math.max(maxVal,Math.max(size.get(fx),size.get(fy)));
+        }
+    }
+
+    public int longestConsecutive(int[] nums) {
+        if(nums.length==0) return 0;
+        for(int i=0;i<nums.length;i++){
+            if(!father.containsKey(nums[i])){
+                father.put(nums[i],nums[i]);
+                size.put(nums[i],1);
+            }
+            //如果存在左右相邻，合并
+            if(father.containsKey(nums[i]-1)){
+                union(nums[i],nums[i]-1);
+            }
+            if(father.containsKey(nums[i]+1)){
+                union(nums[i],nums[i]+1);
+            }
+        }
+        return maxVal;
+    }
+}
