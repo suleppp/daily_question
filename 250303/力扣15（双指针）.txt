@@ -1,0 +1,32 @@
+class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        //我们的核心问题依旧是，排除第三变量的影响，避免结果重复解
+        //而且题目没有提到的关键问题是，哪怕两个结果数组的下标都不同，
+        //但是值都相同，这种算重复解
+        //将三维降为成二维，并且在搜集答案过程中，根据数的特征避免重复解
+        int n=nums.length;
+        List<List<Integer>> ans=new ArrayList<>();
+        if(n<3) return ans;
+        Arrays.sort(nums);
+        for(int i=0;i<n;i++){
+            if(nums[i]>0) break;//后面的数都比i位置的数大，不可能三数之和还为0
+            if(i-1>=0&&nums[i-1]==nums[i]) continue;//和前面的数数值一致，跳过，避免重复答案
+            //确定i位置的数合法，开始搜集i后面的数的答案
+            int l=i+1;
+            int r=n-1;
+            while(l<r){
+                int sum=nums[i]+nums[l]+nums[r];
+                if(sum==0){
+                    ans.add(Arrays.asList(nums[i],nums[l],nums[r]));
+                    //去重
+                    while(l<r&&nums[l]==nums[l+1]) l++;
+                    while(l<r&&nums[r]==nums[r-1]) r--;
+                    l++;r--;
+                }
+                else if(sum>0){r--;}
+                else if(sum<0){l++;}
+            }
+        }
+        return ans;
+    }
+}
