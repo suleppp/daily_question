@@ -1,0 +1,62 @@
+class Solution {
+    public List<Integer> findAnagrams(String str, String pStr) {
+        // 也就是s中的子串，要求字符与p相同并且对应字符数量也相同
+        // 那么就很自然想到滑动窗口
+        // 先预处理s字符串前p.len个字符，计算字符数量，再用窗口滑动过去
+        // 因为窗口长度一定是p.len个，定长，r进字符，l吐字符，保持定长
+        // 那么还需要比对窗口内和p字符串，有想过通过位运算进行优化，
+        // 但是位运算优化没办法解决字符串中同一字符多次出现怎么用位图去表示
+        // 因为一个点位只能表示这个字符存在还是不存在
+        // 不过我们在此还是做一下尝试，如果两个字符串异或运算为0，那么就有可能匹配上，再进一步验证
+        // 如果异或运算不为0，那就是一定匹配不上，一定程度上优化了
+        
+        int sLen = str.length(), pLen = pStr.length();
+        List<Integer> ans = new ArrayList<>();
+        if (sLen < pLen) return ans;
+
+        int[] pCount = new int[26];
+        int[] sCount = new int[26];
+        int pBitMap = 0, sBitMap = 0;
+
+        // 计算 p 的位图和字符频率
+        for (char c : pStr.toCharArray()) {
+            pBitMap |= (1 << (c - 'a'));
+            pCount[c - 'a']++;
+        }
+
+        // 计算初始窗口的位图和字符频率
+        for (int i = 0; i < pLen; i++) {
+            sBitMap |= (1 << (str.charAt(i) - 'a'));
+            sCount[str.charAt(i) - 'a']++;
+        }
+
+        // 先进行位运算快速过滤
+        if ((pBitMap ^ sBitMap) == 0) {
+            if (Arrays.equals(pCount, sCount)) ans.add(0);
+        }
+
+        // 滑动窗口
+        for (int l = 0, r = pLen; r < sLen; r++) {
+            char inChar = str.charAt(r), outChar = str.charAt(l);
+            
+            // 右指针进
+            sBitMap |= (1 << (inChar - 'a'));
+            sCount[inChar - 'a']++;
+
+            // 左指针出
+            sCount[outChar - 'a']--;
+            if (sCount[outChar - 'a'] == 0) {
+                sBitMap ^= (1 << (outChar - 'a')); // 该字符频次变为0，去掉位标记
+            }
+
+            l++; // 移动左指针
+
+            // 先进行位运算快速过滤
+            if ((pBitMap ^ sBitMap) != 0) continue;
+
+            // 位运算通过，再进行字符频率比对
+            if (Arrays.equals(pCount, sCount)) ans.add(l);
+        }
+        return ans;
+    }
+}
