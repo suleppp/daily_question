@@ -1,0 +1,36 @@
+class Solution {
+    public int trap(int[] height) {
+        //双指针
+        //在辅组数组的解法中，我们需要知道i位置左右两边的最大值
+        //来确定哪边是瓶颈进而求出i位置能存储多少水量，因此我们引入了lmax[]和rmax[]
+        //但是在双指针的解法中这是不需要的
+        //首先0位置和n-1位置肯定是接不了水的
+        //我们定义四个变量:l,r,lmax,rmax
+        //l和r指向当前待结算的l or r位置能存储多少水量
+        //lmax是l位置的左边能确定最大柱子高度，rmax是r位置右边能确定的最大柱子高度
+        //当lmax<rmax时，可以结算l位置，为什么？按辅组数组的解法来说，我们需要知道
+        //l位置的左边和右边两边的最高高度才能结算l位置，但是目前我们只有lmax时可以确定的
+        //而l+1位置到r位置中间的最大高度是不知道的，能结算l位置的原因是lmax是可以确定的，
+        //当lmax<rmax的时候，瓶颈在lmax这里，l位置的右边已经保底有rmax这么高了，
+        //l+1位置到r位置中间不确定位置的柱子高度就算大于rmax也无所谓，因为瓶颈在lmax这里
+        //对于r这边同理
+        //当lmax==rmax的时候呢？其实两边都可以结算，道理和上面一样，瓶颈在lmax or rmax,
+        //而另一边的柱子高度有rmax or lmax保底
+        int n=height.length;
+        int lmax=height[0];
+        int rmax=height[n-1];
+        int l=1;int r=n-2;
+        int ans=0+0;//最左和最右位置接不了水
+        while(l<=r){
+            if(lmax<=rmax){
+                ans+=Math.max(0,lmax-height[l]);
+                lmax=Math.max(lmax,height[l++]);
+            }
+            else if(lmax>=rmax){
+                ans+=Math.max(0,rmax-height[r]);
+                rmax=Math.max(rmax,height[r--]);
+            }
+        }
+        return ans;
+    }
+}
