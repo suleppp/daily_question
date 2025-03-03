@@ -1,0 +1,23 @@
+class Solution {
+    public int trap(int[] height) {
+        //辅助数组
+        //只要求出i位置能接住多少雨水这个问题就解决了
+        //i位置能接多少雨水取决于左右两边最长的柱子长度，然后减去i位置本身柱子长度
+        //所以我们使用两个辅助数组，lmax,rmax分别表示左右两边处于一定位置时，左边/右边最长柱子长度
+        int n=height.length;
+        int[] lmax=new int[n];
+        int[] rmax=new int[n];
+        for(int i=0;i<n;i++){
+            lmax[i]=Math.max(i==0?height[0]:lmax[i-1],height[i]);
+        }
+        for(int j=n-1;j>=0;j--){
+            rmax[j]=Math.max(j==n-1?height[n-1]:rmax[j+1],height[j]);
+        }
+
+        int ans=0;
+        for(int i=0;i<n;i++){
+            ans+=Math.min(lmax[i],rmax[i])-height[i];
+        }
+        return ans;
+    }
+}
