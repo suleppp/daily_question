@@ -1,0 +1,23 @@
+class Solution {
+    public int lengthOfLongestSubstring(String str) {
+        //也就是子串中不能有重复的字符
+        //那么我需要知道我的子串中有没有重复的字符，就需要i位置之前的位置的字符信息
+        //那么就用一个数组来记录前面的字符分别有多少个，如果超过了1个就说明这个
+        //状态不对，就不能记录这个答案，这就解决了重复的问题
+        //我们还需要计算最长，由于是子串，连续的，自然而然想到了双指针
+        //当r能继续往后延伸的时候，r使劲往后，并结算答案，当r来到的位置使得字符重复了
+        //我们就让l往后，将沿途的字符都吐出来，直到l和r之间依旧维持不重复字符的子串
+        char[] s=str.toCharArray();
+        int n=s.length;
+        int[] wordCount=new int[256];
+        int ans=0;
+        for(int l=0,r=0;r<n;r++){
+            wordCount[s[r]]++;
+            while(wordCount[s[r]]>1){
+                wordCount[s[l++]]--;
+            }
+            ans=Math.max(ans,r-l+1);
+        }
+        return ans;
+    }
+}
