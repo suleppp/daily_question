@@ -1,0 +1,32 @@
+class Solution {
+    private static final int MAX=100005;
+    private int[] deque=new int[MAX];
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        //意思是需要知道定长滑窗中最大值是谁
+        //难点在于，当滑窗移动的时候，l弹出了滑窗内的最大值，r进入的值很小
+        //那么怎么知道新滑窗内最大的值是谁？
+        //由于我们只需要知道窗口内最大值是谁，所以窗口内的小鱼小虾都不重要
+        //保持队列内的单调性即可,如何保持队列的单调性是个难题，如何让其在下标小于L的时候被淘汰
+        //如何知道其在合法范围内是最大的或者知道是第几大的
+        //那么我们的队列内必须要存储下标了，这样才能知道什么时候被淘汰
+        //并且当新元素比队尾元素大的时候，就该淘汰队尾了
+        //而且队头保持保持最大，这样以来后面的元素不但都比队头小，而且下标都比队头靠后
+        int n=nums.length;
+        int[] ans=new int[n-k+1];
+        //初始化单调队列
+        int h=0;
+        int t=0;
+        for(int i=0;i<k-1;i++){
+            while(h<t&&nums[i]>=nums[deque[t-1]]) t--;
+            deque[t++]=i;
+        }
+        //开始结算答案
+        for(int l=0,r=k-1;l<n-k+1;l++,r++){
+            while(h<t&&nums[r]>=nums[deque[t-1]]) t--;
+            deque[t++]=r;
+            while(h<t&&l>deque[h]) h++;
+            ans[l]=nums[deque[h]];
+        }
+        return ans;
+    }
+}
