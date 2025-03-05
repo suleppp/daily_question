@@ -1,0 +1,18 @@
+class Solution {
+    public int maxSubArray(int[] nums) {
+        //动态规划
+        //试想一下存在一个以i-1位置结尾的子数组arr，i位置的数怎么抉择？
+        //如果i位置的数足够大， 加上arr反而会变小，那还不如i自己组成一个数组
+        //如果i位置的数加上arr会让其比原来i位置的数更大，那一定选择加入
+        //所以我们定义dp[],含义是以i位置为结尾的子数组，最大能多少
+        //因为子数组一定要连续，所以要么依赖dp[i-1]，要么dp[i]=nums[i]
+        int n=nums.length;
+        int[] dp=new int[n];
+        int ans=Integer.MIN_VALUE;
+        for(int i=0;i<n;i++){
+            dp[i]=i-1>=0?Math.max(dp[i-1]+nums[i],nums[i]):nums[i];
+            ans=Math.max(ans,dp[i]);
+        }
+        return ans;
+    }
+}
