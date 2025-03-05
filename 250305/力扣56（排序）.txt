@@ -1,0 +1,18 @@
+class Solution {
+    public int[][] merge(int[][] intervals) {
+        //一眼排序，[a,b]先按a从小往大排，如果a相同，再按照b从小往大排
+        Arrays.sort(intervals, (arr1, arr2) -> 
+    Integer.compare(arr1[0], arr2[0]) != 0 ? Integer.compare(arr1[0], arr2[0]) : Integer.compare(arr1[1], arr2[1]));
+        List<int[]> ans=new ArrayList<>();
+        for(int[] interval:intervals){
+            if(ans.isEmpty()||ans.get(ans.size()-1)[1]<interval[0]){
+                ans.add(interval);
+            }
+            else{
+                //如果ans[i][1]>=curInterval[0]，说明重合了
+                ans.get(ans.size()-1)[1]=Math.max(ans.get(ans.size()-1)[1],interval[1]);
+            }
+        }
+        return ans.toArray(new int[ans.size()][]);
+    }
+}
