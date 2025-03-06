@@ -1,0 +1,35 @@
+class Solution {
+    public int[] productExceptSelf(int[] nums) {
+        int n = nums.length;
+        int all = 1; // 总乘积初始化为 1
+        int zeroCount = 0; // 统计数组中 0 的数量
+
+        // 计算总乘积，并统计 0 的数量
+        for (int num : nums) {
+            if (num == 0) {
+                zeroCount++;
+            } else {
+                all *= num;
+            }
+        }
+
+        int[] ans = new int[n];
+        // 如果数组中有超过一个 0，那么所有结果都是 0
+        if (zeroCount > 1) {
+            return ans;
+        }
+
+        // 遍历数组，计算结果
+        for (int i = 0; i < n; i++) {
+            if (zeroCount == 1) {
+                // 如果数组中有一个 0，那么只有 0 的位置需要特殊处理
+                ans[i] = nums[i] == 0 ? all : 0;
+            } else {
+                // 如果没有 0，直接计算总乘积除以当前元素
+                ans[i] = all / nums[i];
+            }
+        }
+
+        return ans;
+    }
+}
