@@ -1,0 +1,30 @@
+class Solution {
+    public int firstMissingPositive(int[] nums) {
+        //注意题目是最小 正整数 ，所以答案一定在1到nums.length之间
+        //我们位图记录的是：第i位代表第i个正整数，例如第1位代表1，第2位代表2，位图中0为存在，1为不存在
+        int n = nums.length;
+        int size = (n + 63) / 64; // 计算需要多少个 long 变量，每个 long 变量存 64 位
+        long[] bitmaps = new long[size]; // 用多个 long 变量存储位图
+        
+        // 遍历数组，将 [1, n] 范围内的数字对应的位设置为1
+        for (int num : nums) {
+            if (num > 0 && num <= n) {
+                int index = (num - 1) / 64; // 计算存在哪个 long 变量
+                int offset = (num - 1) % 64; // 计算在 long 变量的哪一位
+                bitmaps[index] |= (1L << offset); //将第(num - 1)位设置为1
+            }
+        }
+
+        // 遍历位图，找到第一个未被设置的位
+        for (int i = 0; i < n; i++) {
+            int index = i / 64; // 计算在哪个 long 变量
+            int offset = i % 64; // 计算在 long 变量的哪一位
+            if ((bitmaps[index] & (1L << offset)) == 0) { //检查第i位是否为 0
+                return i + 1;
+            }
+        }
+
+        //如果所有位都被设置，返回 n + 1
+        return n + 1;
+    }
+}
