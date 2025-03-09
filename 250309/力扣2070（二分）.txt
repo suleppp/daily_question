@@ -1,0 +1,40 @@
+class Solution {
+    public int[] maximumBeauty(int[][] items, int[] queries) {
+        Arrays.sort(items, (a, b) -> Integer.compare(a[0], b[0])); // 按价格排序
+        int[] ans = new int[queries.length];
+
+        // 预处理 maxBeauty，维护最大美丽值
+        int n = items.length;
+        int[] maxBeauty = new int[n];
+        maxBeauty[0] = items[0][1];
+        for (int i = 1; i < n; i++) {
+            maxBeauty[i] = Math.max(maxBeauty[i - 1], items[i][1]);
+        }
+
+        int pos = 0;
+        for (int q : queries) {
+            int l = 0, r = items.length - 1;
+            while (l < r) {
+                int mid = (l + r + 1) >> 1;
+                if (check(mid, q, items)) {
+                    l = mid;
+                } else {
+                    r = mid - 1;
+                }
+            }
+            int res = r;
+            //验证res是否真的<=q
+            if (!check(res, q, items)) {
+                ans[pos] = 0;
+            } else {
+                ans[pos] = maxBeauty[res]; // 直接取最大美丽值
+            }
+            pos++;
+        }
+        return ans;
+    }
+
+    private boolean check(int mid, int q, int[][] items) {
+        return items[mid][0] <= q;
+    }
+}
