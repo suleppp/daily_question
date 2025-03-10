@@ -1,0 +1,32 @@
+class Solution {
+    public boolean searchMatrix(int[][] matrix, int target) {
+        //先二分锁定所在行，再二分锁定所在列
+        int n=matrix.length;
+        int m=matrix[0].length;
+        int l=0;
+        int r=n-1;
+        while(l<r){
+            int mid=(l+r+1)>>1;
+            if(matrix[mid][0]>target){
+                r=mid-1;
+            }
+            else{
+                l=mid;
+            }
+        }
+        int row=r;
+        int ll=0;
+        int rr=m-1;
+        while(ll<rr){
+            int mid=(ll+rr+1)>>1;
+            if(matrix[row][mid]>target){
+                rr=mid-1;
+            }
+            else{
+                ll=mid;
+            }
+        }
+        int col=rr;
+        return matrix[row][col]==target;
+    }
+}
