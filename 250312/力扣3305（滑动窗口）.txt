@@ -1,0 +1,42 @@
+class Solution {
+    public int countOfSubstrings(String w, int k) {
+        //题意：找出子字符串的总数，子字符串至少包含一个元音，并且恰好k个辅音
+        //恰好型滑动窗口：转换成两个至少型滑动窗口
+        //比如：某班有10个人至少20岁，3个人至少21岁，那么恰好20岁的人有多少个？
+        //设A为「至少20岁」的人，人数为10
+        //设B为「至少 21岁」的人，人数为3
+        //「至少20岁」包括「恰好20岁」和「至少21岁」
+        //也就是说「恰好20岁」就等于10-3=7
+        //本题同理，两次滑窗求出辅音至少k个和至少k+1个的子串个数，两者一减即可
+        char[] words=w.toCharArray();
+        return function(words,k)-function(words,k+1);
+    }
+
+    //求出一共有多少子字符串，子字符串内至少出现一次元音，至少出现k次辅音
+    private int function(char[] words,int k){
+        HashMap<Character, Integer> cnt1 = new HashMap<>(); // 每种元音的个数
+        int cnt2=0;//窗口内辅音出现的次数
+        int n=words.length;
+        int ans=0;
+        for(int l=0,r=0;r<n;r++){
+            if("aeiou".indexOf(words[r])>=0){
+            cnt1.put(words[r], cnt1.getOrDefault(words[r], 0) + 1);
+            }
+            else cnt2++;
+            while(cnt1.size()==5 &&cnt2>=k){
+                if ("aeiou".indexOf(words[l]) >= 0) {
+                    cnt1.put(words[l], cnt1.get(words[l]) - 1);
+                    if (cnt1.get(words[l]) == 0) {
+                        cnt1.remove(words[l]);
+                    }
+                }
+                else {
+                    cnt2--;
+                }
+                l++;
+            }
+            ans+=l;
+        }
+        return ans;
+    }
+}
